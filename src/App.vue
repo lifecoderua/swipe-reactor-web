@@ -1,10 +1,60 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import { useQuery } from '@vue/apollo-composable'
+import gql from 'graphql-tag'
+
+const GET_POSTS = gql`
+    query GetPosts($tagName: String, $type: PostLineType!, $page: Int, $offset: Int) {
+    tag(name: $tagName) {
+      name,
+      nsfw,
+      postPager(type: $type) {
+        posts(page: $page, offset: $offset) {
+          header,
+          text,
+          nsfw,
+          attributes {
+            __typename
+            type
+            id
+            insertId
+            image {
+              id
+              width
+              height
+              type
+              hasVideo
+              comment
+            }
+          },
+          tags {
+            name
+          },
+          user {
+            username
+          },
+          id
+        }
+        count
+      }
+    },
+  }`;
+
+const tagName = null;
+const offset = 0;
+
+const { result } = useQuery(GET_POSTS, {
+    tagName,
+    type: 'GOOD',
+    page: 0,
+    offset,
+});
 </script>
 
 <template>
   <header>
+    {{ result }}
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
     <div class="wrapper">
