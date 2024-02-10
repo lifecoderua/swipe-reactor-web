@@ -3,6 +3,7 @@ import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
 import { useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
+import PostsList from '@/components/PostsList.vue'
 
 const GET_POSTS = gql`
     query GetPosts($tagName: String, $type: PostLineType!, $page: Int, $offset: Int) {
@@ -53,21 +54,9 @@ const { result } = useQuery(GET_POSTS, {
 </script>
 
 <template>
-  <header>
-    {{ result }}
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+  <PostsList
+    :posts="result?.tag?.postPager?.posts"
+  />
 </template>
 
 <style scoped>
