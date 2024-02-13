@@ -7,10 +7,11 @@
     :keyboard="{
       enabled: true,
     }"
+    @keyPress="onKeyPress"
     :mousewheel="{
       enabled: true,
       sensitivity: 1,
-      thresholdDelta: 15,
+      thresholdDelta: 0,
       thresholdTime: null,
     }"
     :navigation="true"
@@ -20,16 +21,15 @@
   >
     <swiper-slide
       v-for="post in posts"
+      :key="post.id"
     >
-      <h3>{{ post.user.username }}</h3>
-      <img
-        :src="getImageSrc(post)"
-        alt="post"
-      />
+      <single-post :post="post" />
     </swiper-slide>
   </swiper>
 </template>
 <script setup lang="ts">
+import SinglePost from '@/components/SinglePost.vue'
+
 // Import Swiper Vue.js components
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Keyboard, Mousewheel, Pagination, Navigation } from 'swiper/modules';
@@ -56,27 +56,20 @@ const onSlideChange = () => {
   console.log('slide change');
 };
 
-const getImageSrc = (post: any) => {
-  if (!post.attributes?.[0]?.image) {
-    return undefined;
+const onKeyPress = (swiper: any, event: any) => {
+  // support w/s for slide change
+  if (event === 87) {
+    swiper.slidePrev();
+  } else if (event === 83) {
+    swiper.slideNext();
   }
-
-  const image = post.attributes[0].image;
-  const tags = post.tags.map((tag: any) => tag.name);
-  const imagePostId = atob(post.attributes[0].id).split(':')[1];
-  return `https://img10.joyreactor.cc/pics/post/image-${imagePostId}.${image.type}`;
-}
+};
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .swiper {
   margin: 0 auto;
-  width: 600px;
-  height: 300px;
-
-  img {
-    max-width: 100%;
-    max-height: 100%;
-  }
+  width: 80vw;
+  height: 80vh;
 }
 </style>

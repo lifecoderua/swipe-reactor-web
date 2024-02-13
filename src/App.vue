@@ -1,6 +1,13 @@
+<template>
+  <div id="app">
+    <PostsList
+      :posts="result?.tag?.postPager?.posts"
+    />
+  </div>
+</template>
+
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
 import { useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import PostsList from '@/components/PostsList.vue'
@@ -43,7 +50,7 @@ const GET_POSTS = gql`
   }`;
 
 const tagName = null;
-const offset = 0;
+const offset = 10;
 
 const { result } = useQuery(GET_POSTS, {
     tagName,
@@ -53,13 +60,13 @@ const { result } = useQuery(GET_POSTS, {
 });
 </script>
 
-<template>
-  <PostsList
-    :posts="result?.tag?.postPager?.posts"
-  />
-</template>
-
 <style scoped>
+#app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 header {
   line-height: 1.5;
   max-height: 100vh;
