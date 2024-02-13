@@ -1,7 +1,8 @@
 <template>
   <div id="app">
+    <h1>Offset: {{ postsStore.offset }}</h1>
     <PostsList
-      :posts="result?.tag?.postPager?.posts"
+      :posts="posts"
       @onSlideChange="onSlideChange"
     />
   </div>
@@ -12,12 +13,12 @@ import { RouterLink, RouterView } from 'vue-router'
 import { useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import PostsList from '@/components/PostsList.vue'
+import { usePostsStore } from '@/store/posts'
+import { computed, reactive } from 'vue'
 
 const GET_POSTS = gql`
     query GetPosts($tagName: String, $type: PostLineType!, $page: Int, $offset: Int) {
     tag(name: $tagName) {
-      name,
-      nsfw,
       postPager(type: $type) {
         posts(page: $page, offset: $offset) {
           header,
@@ -50,18 +51,67 @@ const GET_POSTS = gql`
     },
   }`;
 
-const tagName = null;
-const offset = 0;
+const postsStore = usePostsStore();
 
-const { result } = useQuery(GET_POSTS, {
-    tagName,
-    type: 'GOOD',
-    page: 0,
-    offset,
+const tagName = null;
+
+const { result, fetchMore } = useQuery(GET_POSTS, reactive({
+  tagName,
+  type: 'GOOD',
+  page: 0,
+  offset: postsStore.offset,
+}));
+/*
+const query = useQuery(GET_POSTS, reactive({
+  tagName,
+  type: 'GOOD',
+  page: 0,
+  offset: postsStore.offset,
+}));
+
+query.onResult((result) => {
+  console.log(result);
+});
+*/
+
+const posts = computed(() => {
+  const filteredPosts = result?.value?.tag?.postPager?.posts
+    .filter((post: any) => !post.nsfw)
+    .filter((post: any) => post.attributes.some((attr: any) => attr.image));
+
+  return filteredPosts || [];
 });
 
 function onSlideChange(navigationEvent: any) {
-  console.log(navigationEvent);
+  if (posts.value.length - navigationEvent.activeIndex > 3) {
+    return;
+  }
+
+  postsStore.nextPage();
+
+  fetchMore({
+    variables: {
+      tagName,
+      type: 'GOOD',
+      page: 0,
+      offset: postsStore.offset,
+    },
+
+    // concatenate old and new entries
+    updateQuery: (previousResult, { fetchMoreResult }) => {
+      const newEntriesPager = fetchMoreResult.tag.postPager;
+
+      return {
+        ...previousResult,
+        tag: {
+          postPager: {
+            posts: [...previousResult.tag.postPager.posts, ...newEntriesPager.posts],
+            count: newEntriesPager.count,
+          },
+        },
+      };
+    },
+  });
 }
 </script>
 
