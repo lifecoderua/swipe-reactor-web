@@ -50,7 +50,7 @@ const GET_POSTS = gql`
   }`;
 
 const tagName = null;
-const offset = 10;
+const offset = 0;
 
 const { result } = useQuery(GET_POSTS, {
     tagName,
