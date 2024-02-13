@@ -31,6 +31,7 @@
 import SinglePost from '@/components/SinglePost.vue'
 
 // Import Swiper Vue.js components
+import { Swiper as SwiperClass } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Keyboard, Mousewheel, Pagination, Navigation } from 'swiper/modules';
 
@@ -46,14 +47,20 @@ defineProps(
   }
 );
 
+const emits = defineEmits(['onSlideChange'])
+
 const swiperModules = [Keyboard, Mousewheel, Pagination, Navigation];
 
 const onSwiper = (swiper: any) => {
   console.log(swiper);
 };
 
-const onSlideChange = () => {
-  console.log('slide change');
+const onSlideChange = (swiper: SwiperClass) => {
+  console.log('slide change', swiper.activeIndex);
+
+  emits('onSlideChange', {
+    activeIndex: swiper.activeIndex,
+  });
 };
 
 const onKeyPress = (swiper: any, event: any) => {

@@ -2,6 +2,7 @@
   <div id="app">
     <PostsList
       :posts="result?.tag?.postPager?.posts"
+      @onSlideChange="onSlideChange"
     />
   </div>
 </template>
@@ -58,6 +59,10 @@ const { result } = useQuery(GET_POSTS, {
     page: 0,
     offset,
 });
+
+function onSlideChange(navigationEvent: any) {
+  console.log(navigationEvent);
+}
 </script>
 
 <style scoped>
