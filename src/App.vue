@@ -16,6 +16,19 @@ import PostsList from '@/components/PostsList.vue'
 import { usePostsStore } from '@/store/posts'
 import { computed, reactive } from 'vue'
 
+// TODO: non-image media support
+// TODO: add tag and offset to the routing & URL
+// TODO: add tag navigation
+// TODO: add circular load if not enough items is loaded
+// TODO: add limiter / don't load after the end of posts
+// TODO: consider posts unloading from the Swapper once too many is present in the DOM
+// TODO: handle loading errors
+// TODO: display best comment
+// TODO: Post view / comments
+// TODO: Img+Text view
+// TODO: login
+// TODO: PWA
+
 const GET_POSTS = gql`
     query GetPosts($tagName: String, $type: PostLineType!, $page: Int, $offset: Int) {
     tag(name: $tagName) {
