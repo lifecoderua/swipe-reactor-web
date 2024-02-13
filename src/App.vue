@@ -19,6 +19,8 @@ import { computed, reactive } from 'vue'
 // TODO: non-image media support
 // TODO: add tag and offset to the routing & URL
 // TODO: add tag navigation
+// TODO: SFW filter
+// TODO: dedupe posts on load (on the page border post could be duplicated. Intended to be filtered out by the Apollo, but doesn't)
 // TODO: add circular load if not enough items is loaded
 // TODO: add limiter / don't load after the end of posts
 // TODO: consider posts unloading from the Swapper once too many is present in the DOM
