@@ -11,8 +11,11 @@
   </div>
 
   <swiper
-    effect="cards"
+    effect="coverflow"
+    slidesPerView="auto"
+    :centeredSlides="true"
     :grabCursor="true"
+    :spaceBetween="30"
     :modules="swiperModules"
     class="single-post-swiper"
     direction="horizontal"
@@ -39,11 +42,11 @@
 <script setup lang="ts">
 // Import Swiper Vue.js components
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import { EffectCards, Keyboard, Pagination, Navigation } from 'swiper/modules';
+import { EffectCoverflow, Keyboard, Pagination, Navigation } from 'swiper/modules';
 
 // Import Swiper styles
 import 'swiper/css';
-import 'swiper/css/effect-cards';
+import 'swiper/css/effect-coverflow';
 import type { PropType } from 'vue'
 
 defineProps(
@@ -55,7 +58,7 @@ defineProps(
   }
 );
 
-const swiperModules = [EffectCards, Keyboard, Pagination, Navigation];
+const swiperModules = [EffectCoverflow, Keyboard, Pagination, Navigation];
 
 const onSwiper = (swiper: any) => {
   console.log(swiper);
